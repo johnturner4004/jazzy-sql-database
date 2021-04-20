@@ -7,7 +7,7 @@ const PORT = 5000;
 
 const Pool = pg.Pool;
 const pool = new Pool({
-    database: 'database',
+    database: 'jazzy_sql',
     host: 'localhost',
     port: '5432',
     max:10,
@@ -30,44 +30,44 @@ app.listen(PORT, () => {
 });
 
 // TODO - Replace static content with a database tables
-const artistList = [ 
-    {
-        name: 'Ella Fitzgerald',
-        birthdate: '04-25-1917'
-    },
-    {
-        name: 'Dave Brubeck',
-        birthdate: '12-06-1920'
-    },       
-    {
-        name: 'Miles Davis',
-        birthdate: '05-26-1926'
-    },
-    {
-        name: 'Esperanza Spalding',
-        birthdate: '10-18-1984'
-    },
-]
-const songList = [
-    {
-        title: 'Take Five',
-        length: '5:24',
-        released: '1959-09-29'
-    },
-    {
-        title: 'So What',
-        length: '9:22',
-        released: '1959-08-17'
-    },
-    {
-        title: 'Black Gold',
-        length: '5:17',
-        released: '2012-02-01'
-    }
-];
+// const artistList = [ 
+//     {
+//         name: 'Ella Fitzgerald',
+//         birthdate: '04-25-1917'
+//     },
+//     {
+//         name: 'Dave Brubeck',
+//         birthdate: '12-06-1920'
+//     },       
+//     {
+//         name: 'Miles Davis',
+//         birthdate: '05-26-1926'
+//     },
+//     {
+//         name: 'Esperanza Spalding',
+//         birthdate: '10-18-1984'
+//     },
+// ]
+// const songList = [
+//     {
+//         title: 'Take Five',
+//         length: '5:24',
+//         released: '1959-09-29'
+//     },
+//     {
+//         title: 'So What',
+//         length: '9:22',
+//         released: '1959-08-17'
+//     },
+//     {
+//         title: 'Black Gold',
+//         length: '5:17',
+//         released: '2012-02-01'
+//     }
+// ];
 
 app.get('/', (req, res) => {
-    let queryText = 'SELECT * FROM database'
+    let queryText = 'SELECT * FROM jazzy_sql'
     pool.query(queryText)
         .then(dbResult =>{
             res.send(dbResult.rows);
@@ -80,8 +80,18 @@ app.get('/', (req, res) => {
 });
 
 app.get('/artist', (req, res) => {
-    console.log(`In /songs GET`);
-    res.send(artistList);
+    console.log(`In /artist GET`);
+    // res.send(artistList);
+    const sqlText = `SELECT * FROM artist ORDER BY birthdate;`;
+    pool.query(sqlText)
+        .then( results => {
+            console.log('Got artists from database', results);
+            res.send(results.rows);
+        })
+        .catch( error => {
+            console.log(`Error making query ${sqlText}`, error);
+            res.sendStatis(500);
+        })
 });
 
 app.post('/artist', (req, res) => {
@@ -91,7 +101,7 @@ app.post('/artist', (req, res) => {
 
 app.get('/song', (req, res) => {
     console.log(`In /songs GET`);
-    res.send(songList);
+    // res.send(songList);
 });
 
 app.post('/song', (req, res) => {
