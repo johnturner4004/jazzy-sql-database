@@ -111,7 +111,7 @@ function renderSongs(listOfSongs) {
                 <tr>
                     <td>${song.title}</td>
                     <td>${song.length}</td>
-                    <td>${song.released}</td>
+                    <td>${song.release}</td>
                 </tr>`
             );
     }
