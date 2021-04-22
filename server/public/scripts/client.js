@@ -22,6 +22,9 @@ function addArtist() {
         birthdate: $('#artist-born').val()
     };
 
+    $('#artist-name').val('');
+    $('#artist-born').val('');
+
     console.log('Adding artist', artistToSend);
 
     // Send the new artist to the server as data
@@ -42,7 +45,7 @@ function addSong() {
     // Get info to send to the server
     const newSong = {
         title: $('#song-name').val(), 
-        length: $('#song-length').val(),
+        duration: $('#song-length').val(),
         released: $('#song-released').val()
     };
 

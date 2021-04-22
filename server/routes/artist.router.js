@@ -1,12 +1,9 @@
 const express = require('express');
-const artistRouter = express.Router();
+const router = express.Router();
 
-artistRouter.get('/', (req,res) => {
-  res.send('Hello from artistRouter root route');
-  
-})
+const pool = require('../modules/pool');
 
-artistRouter.get('/', (req, res) => {
+router.get('/', (req, res) => {
   console.log(`In /artist GET`);
   // res.send(artistList);
   const sqlText = `SELECT * FROM artist ORDER BY birthdate;`;
@@ -21,16 +18,15 @@ artistRouter.get('/', (req, res) => {
     })
 });
 
-artistRouter.post('/', (req, res) => {
+router.post('/', (req, res) => {
   // artistList.push(req.body);
-  const newArtist = {
-    name: req.body.name,
-    birthdate: req.body.birthdate
-  };
-
+  console.log(req.body);
+  
+  let newArtist = req.body;
   const queryText = `INSERT INTO "artist" ("name", "birthdate")
   VALUES($1, $2);`;
-  pool.query(queryText, [req.body.name, req.body.birthdate])
+  console.log(newArtist);
+  pool.query(queryText, [newArtist.name, newArtist.birthdate])
     .then(results => {
       console.log('new artist is:', results);
       res.sendStatus(201);
@@ -38,9 +34,7 @@ artistRouter.post('/', (req, res) => {
     .catch(err => {
       console.log(`Error making query ${queryText}`, err);
       res.sendStatus(500);
-
     });
 });
 
-
-module.exports = artistRouter;
+module.exports = router;

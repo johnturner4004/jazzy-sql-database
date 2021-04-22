@@ -1,7 +1,9 @@
 const express = require('express');
-const songRouter = express.Router();
+const router = express.Router();
 
-songRouter.get('/song', (req, res) => {
+const pool = require('../modules/pool')
+
+router.get('/', (req, res) => {
     console.log(`In /song GET`);
     // res.send(artistList);
     const sqlText = `SELECT * FROM song ORDER BY release;`;
@@ -16,18 +18,13 @@ songRouter.get('/song', (req, res) => {
         })
 });
 
-songRouter.post('/song', (req, res) => {
-    res.sendStatus(201);
-    const newSong = {
-        title: req.body.title,
-        length: req.body.length,
-        released: req.body.released
-    };
+router.post('/', (req, res) => {
+    let newSong = req.body;
     const queryText = `INSERT INTO "song" ("title", "length", "release")
     VALUES ($1, $2, $3);`;
-    pool.query(queryText, [req.body.title, req.body.length, req.body.released])
+    pool.query(queryText, [newSong.title, newSong.duration, newSong.released])
         .then(result => {
-            console.log('Added a song to the database');
+            console.log('Added a song to the database', result);
             res.sendStatus(201);
         })
         .catch(error => {
@@ -36,4 +33,4 @@ songRouter.post('/song', (req, res) => {
         });
 });
 
-module.exports = songRouter;
+module.exports = router;

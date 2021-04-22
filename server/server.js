@@ -1,18 +1,17 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const pg = require('pg');
-
 const app = express();
-const PORT = 5000;
-
+const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
+
+const artistRouter = require('./routes/artist.router.js');
+app.use('/artist', artistRouter);
+
+const songRouter = require('./routes/song.router.js');
+app.use('/song', songRouter);
+
 app.use(express.static('server/public'));
 
-let jazzyRouter = require('./modules/pool');
-app.use('/', jazzyRouter);
-
-
-
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log('listening on port', PORT)
+    console.log('listening on port', PORT);
 });
